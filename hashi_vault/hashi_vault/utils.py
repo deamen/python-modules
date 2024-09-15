@@ -3,9 +3,12 @@ import requests
 import sys
 from datetime import datetime, timezone
 
+
 class ActiveNodeNotFoundError(Exception):
     """Custom exception raised when no active Vault node is found."""
+
     pass
+
 
 def get_active_node(servers, retries=3, interval=5):
     """
@@ -43,7 +46,10 @@ def get_active_node(servers, retries=3, interval=5):
                 time.sleep(interval)
 
     # If no active node is found, raise an exception
-    raise ActiveNodeNotFoundError("No active Vault node found after checking all servers and retries.")
+    raise ActiveNodeNotFoundError(
+        "No active Vault node found after checking all servers and retries."
+    )
+
 
 def check_token_expiry(vault_addr, vault_token, days_left):
     """
@@ -67,7 +73,9 @@ def check_token_expiry(vault_addr, vault_token, days_left):
         expire_time_str = token_data.get("expire_time")
 
         if expire_time_str:
-            expire_time = datetime.fromisoformat(expire_time_str.rstrip("Z"))  # Handle Zulu time zone format
+            expire_time = datetime.fromisoformat(
+                expire_time_str.rstrip("Z")
+            )  # Handle Zulu time zone format
             current_time = datetime.now(timezone.utc)
             days_left_to_expire = (expire_time - current_time).days
 
@@ -79,4 +87,3 @@ def check_token_expiry(vault_addr, vault_token, days_left):
     except requests.RequestException as e:
         print(f"Error checking token expiration: {e}")
         sys.exit(1)
-
