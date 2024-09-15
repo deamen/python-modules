@@ -87,3 +87,44 @@ def check_token_expiry(vault_addr, vault_token, days_left):
     except requests.RequestException as e:
         print(f"Error checking token expiration: {e}")
         sys.exit(1)
+
+
+def create_batch_token(vault_addr, access_token, ttl, policies=["default"]):
+    """
+    Create a new Vault batch token using the given access_token.
+
+    Parameters:
+    - vault_addr (str): The Vault server address.
+    - access_token (str): The token used to authenticate with Vault.
+    - ttl (int): Time-to-live for the new token in seconds.
+    - policies (list): List of policies for the new token.
+
+    Returns:
+    - str: The newly created Vault batch token.
+    """
+
+    # Construct the URL
+    url = f"https://{vault_addr}/v1/auth/token/create-orphan"
+
+    # Set the headers
+    headers = {"X-Vault-Token": access_token, "Content-Type": "application/json"}
+
+    # Build the request body with token_type set to 'batch'
+    payload = {"policies": policies, "ttl": ttl, "type": "batch"}
+
+    try:
+        # Make the POST request to Vault
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the response JSON to extract the new token
+        data = response.json()
+        new_token = data["auth"]["client_token"]
+        return new_token
+
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")  # Handle HTTP errors
+    except Exception as err:
+        print(f"An error occurred: {err}")  # Handle other exceptions
+
+    return None  # Return None if token creation fails
