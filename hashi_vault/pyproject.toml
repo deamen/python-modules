@@ -17,4 +17,4 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/deamen/python-modules/tree/main/hashi_vault"
+Homepage = "https://github.com/deamen/python-modules/tree/master/hashi_vault"
