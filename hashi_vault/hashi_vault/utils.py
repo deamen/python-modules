@@ -115,7 +115,7 @@ def create_batch_token(vault_addr, access_token, ttl, policies=["default"]):
     """
 
     # Construct the URL
-    url = f"https://{vault_addr}/v1/auth/token/create-orphan"
+    url = f"{vault_addr}/v1/auth/token/create-orphan"
 
     # Set the headers
     headers = {"X-Vault-Token": access_token, "Content-Type": "application/json"}
