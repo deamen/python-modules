@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deamen_yaml"
+version = "0.1.0"
+description = "Frequently used Yaml codes"
+authors = [{ name = "Song Tang", email = "deamen@gmail.com" }]
+license = { text = "GPL-3.0-only" }
+keywords = ["Yaml", "Indent", "Indentation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies = ["requests"]
+
+[project.urls]
+Homepage = "https://github.com/deamen/python-modules/tree/master/deamen_yaml"
