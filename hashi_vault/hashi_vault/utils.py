@@ -164,8 +164,3 @@ def is_sealed(vault_addr):
         # Handle any network-related exceptions or errors
         print(f"Error connecting to Vault server: {e}")
         return True  # Assume sealed if unable to connect or retrieve status
-
-# Example usage
-vault_server = "https://vault.example.com"
-sealed_status = is_sealed(vault_server)
-print(f"Is Vault sealed? {'Yes' if sealed_status else 'No'}")
