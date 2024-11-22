@@ -139,3 +139,33 @@ def create_batch_token(vault_addr, access_token, ttl, policies=["default"]):
         print(f"An error occurred: {err}")  # Handle other exceptions
 
     return None  # Return None if token creation fails
+
+def is_sealed(vault_addr):
+    """
+    Check if the Vault server is sealed.
+
+    Args:
+        vault_addr (str): The Vault server address (e.g., "https://vault.example.com").
+
+    Returns:
+        bool: True if the Vault is sealed, False otherwise.
+    """
+    try:
+        # Make a GET request to the health endpoint
+        response = requests.get(f"{vault_addr}/v1/sys/health", timeout=10)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the JSON response
+        health_status = response.json()
+        # Check the 'sealed' key in the response
+        return health_status.get("sealed", True)
+
+    except requests.exceptions.RequestException as e:
+        # Handle any network-related exceptions or errors
+        print(f"Error connecting to Vault server: {e}")
+        return True  # Assume sealed if unable to connect or retrieve status
+
+# Example usage
+vault_server = "https://vault.example.com"
+sealed_status = is_sealed(vault_server)
+print(f"Is Vault sealed? {'Yes' if sealed_status else 'No'}")
