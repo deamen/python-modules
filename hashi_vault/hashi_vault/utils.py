@@ -153,14 +153,21 @@ def is_sealed(vault_addr):
     try:
         # Make a GET request to the health endpoint
         response = requests.get(f"{vault_addr}/v1/sys/health", timeout=10)
-        response.raise_for_status()  # Raise an exception for HTTP errors
+        
+        # Handle Vault-specific status codes
+        if response.status_code == 503:  # Sealed
+            return True
+        if response.status_code in [200, 429, 472, 473]:  # Unsealed or active states
+            return False
+        if response.status_code == 501:  # Not initialized
+            print("Vault is not initialized.")
+            return True
 
-        # Parse the JSON response
-        health_status = response.json()
-        # Check the 'sealed' key in the response
-        return health_status.get("sealed", True)
+        # Unexpected status code
+        print(f"Unexpected status code: {response.status_code}")
+        return True  # Assume sealed in unknown cases
 
     except requests.exceptions.RequestException as e:
         # Handle any network-related exceptions or errors
         print(f"Error connecting to Vault server: {e}")
-        return True  # Assume sealed if unable to connect or retrieve status
+        return True  # Assume sealed if unable to connect
